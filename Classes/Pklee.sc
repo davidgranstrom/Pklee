@@ -1,7 +1,7 @@
 // ===========================================================================
-// Title		 : Pklee
-// Description	 : A (basic) Klee sequencer pattern implementation
-// Copyright (c) : David Granström 2016 
+// Title         : Pklee
+// Description   : A (basic) Klee sequencer pattern implementation
+// Copyright (c) : David Granström 2016
 // ===========================================================================
 
 Pklee : FilterPattern {
@@ -19,7 +19,7 @@ Pklee : FilterPattern {
         ^event[\kleeSum] = val;
     }
 
-	embedInStream {|event|
+    embedInStream {|event|
         // TODO: Handle sequence and steps as streams
         var eventStream = pattern.asStream;
         var val, filteredEvent, inEvent, inSteps;
