@@ -5,14 +5,14 @@
 // ===========================================================================
 
 Pklee : FilterPattern {
-    var <>sequence, <>activeSteps;
+    var <>sequence, <>steps;
 
-    *new {|pattern, sequence, activeSteps|
-        ^super.new(pattern).sequence_(sequence).activeSteps_(activeSteps);
+    *new {|pattern, sequence, steps|
+        ^super.new(pattern).sequence_(sequence).steps_(steps);
     }
 
     storeArgs {
-        ^[ pattern, sequence, activeSteps ];
+        ^[ pattern, sequence, steps ];
     }
 
     filterEvent {|event, val|
@@ -22,20 +22,20 @@ Pklee : FilterPattern {
 	embedInStream {|event|
         // TODO: Handle sequence and steps as streams
         var eventStream = pattern.asStream;
-        var val, filteredEvent, inEvent;
+        var val, filteredEvent, inEvent, inSteps;
 
         loop {
-            var steps = activeSteps.collect {|step, i|
+            inSteps = steps.collect {|step, i|
                 // return the index
                 (step > 0).if(i, nil);
             }.reject {|idx| idx.isNil };
             // get the sum of the values
-            val = (sequence@steps).sum.clip(0, 1);
+            val = (sequence@inSteps).sum.clip(0, 1);
             // add it to the output stream
             event = event.copy;
             filteredEvent = this.filterEvent(event, val);
             // advance the sequencer
-            activeSteps = activeSteps.rotate(1);
+            steps = steps.rotate(1);
 
             inEvent = eventStream.next(filteredEvent);
             event = yield(inEvent);
