@@ -8,7 +8,7 @@ Pklee : FilterPattern {
     var <>sequence, <>activeSteps;
 
     *new {|pattern, sequence, activeSteps|
-        ^super.new(pattern).sequence_(sequence.normalizeSum).activeSteps_(activeSteps);
+        ^super.new(pattern).sequence_(sequence).activeSteps_(activeSteps);
     }
 
     storeArgs {
@@ -30,7 +30,7 @@ Pklee : FilterPattern {
                 (step > 0).if(i, nil);
             }.reject {|idx| idx.isNil };
             // get the sum of the values
-            val = (sequence@steps).sum;
+            val = (sequence@steps).sum.clip(0, 1);
             // add it to the output stream
             event = event.copy;
             filteredEvent = this.filterEvent(event, val);
