@@ -1,0 +1,88 @@
+title:: Pklee
+summary:: "Klee sequencer" filter pattern
+related:: Classes/Pattern, Classes/Event, Classes/Pbindf
+categories:: Streams-Patterns-Events>Patterns>Composition
+
+description::
+
+Pklee sequences an array of values according to the principles of a emphasis::Klee sequencer::.
+
+The Klee sequencer operates off of a shift register that can have more than one active bit in the register. Meaning that, we can have strong::multiple active sequencer steps::. If we only have on active step it will behave just like a "regular" sequencer.
+
+The sum of the values will be stored in the special key teletype::kleeSum::, which can be accessed from the input pattern.
+
+ClassMethods::
+
+method::new
+The arguments to Pklee is the initial pattern followed by an array of values and an array of steps ranging from 0 - 1. The input sequence will be clipped to 0 - 1
+
+Examples::
+
+code::
+(
+p = Pklee(
+    Pbind(
+        \amp, Pfunc {|event|
+            ControlSpec.specs[\amp].map(event.kleeSum);
+        },
+    ),
+    [ 0, 1, 0, 0.5, 0, 0.25, 1, 0 ], // sequence
+    [ 1, 0, 1, 0,   0, 0,    0, 0 ], // two active steps
+).asStream;
+)
+
+p.next(()); // pass in an event ()
+
+// sound examples
+s.boot;
+
+(
+var degreeSpec = ControlSpec(0, 7, \lin);
+
+p = Pklee(
+    Pbind(
+        \instrument, \default,
+        \degree, Pfunc {|event|
+            degreeSpec.map(event.kleeSum).round(1);
+        },
+        \dur, 1/4
+    ),
+    [ 0, 1, 0, 0.5, 0, 0.25, 1, 0 ], // sequence
+    [ 1, 0, 1, 0,   0, 0,    0, 0 ], // two active steps
+).play;
+)
+
+// change sequence while playing
+(
+var degreeSpec = ControlSpec(0, 7, \lin);
+
+p.stream = Pklee(
+    Pbind(
+        \instrument, \default,
+        \degree, Pfunc {|event|
+            degreeSpec.map(event.kleeSum).round(1);
+        },
+        \dur, 1/4
+    ),
+    [ 0, 1, 0, 0.5, 1, 0.35, 1, 0 ], // sequence
+    [ 1, 0, 1, 0,   0, 0,    0, 0 ], // two active steps
+).asStream;
+)
+
+// random sequence
+(
+var degreeSpec = ControlSpec(0, 7, \lin);
+
+p.stream = Pklee(
+    Pbind(
+        \instrument, \default,
+        \degree, Pfunc {|event|
+            degreeSpec.map(event.kleeSum).round(1);
+        },
+        \dur, 1/4
+    ),
+    Array.fill(16, { rrand(0.0, 1.0) }),
+    Array.fill(16, { [ 0, 1 ].wchoose([ 0.9, 0.1 ]) })
+).asStream;
+)
+::
