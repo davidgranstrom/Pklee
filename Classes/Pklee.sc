@@ -20,8 +20,8 @@ Pklee : FilterPattern {
     }
 
     embedInStream {|event|
-        var eventStream = pattern.asStream;
         var val, filteredEvent, inEvent, inSteps;
+        var eventStream = pattern.asStream;
 
         loop {
             // return the indices
