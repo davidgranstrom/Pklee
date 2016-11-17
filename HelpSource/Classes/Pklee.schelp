@@ -7,14 +7,32 @@ description::
 
 Pklee sequences an array of values according to the principles of a emphasis::Klee sequencer::.
 
-The Klee sequencer operates off of a shift register that can have more than one active bit in the register. Meaning that, we can have strong::multiple active sequencer steps::. If we only have on active step it will behave just like a "regular" sequencer.
+The Klee sequencer operates from a shift register that can have more than one active bit in the register. Meaning that, we can have strong::multiple active sequencer steps:: active at the same time. If we only have on active step it will behave just like a "regular" sequencer.
 
 The sum of the values will be stored in the special key teletype::kleeSum::, which can be accessed from the input pattern.
 
-ClassMethods::
+classmethods::
 
 method::new
-The arguments to Pklee is the initial pattern followed by an array of values and an array of steps ranging from 0 - 1. The input sequence will be clipped to 0 - 1
+The arguments to Pklee is the initial pattern followed by an array of values and an array of steps ranging from 0 - 1. The output of the Klee sequence will be clipped to 0 - 1.
+
+argument:: pattern
+The input pattern.
+
+The pattern will receive the output of the Klee sequence in the key teletype::kleeSum:: 
+
+argument:: sequence
+A list of numbers to be sequenced 0 - 1.
+
+argument:: steps
+A list of steps which can be 0 (inactive) or 1 (active).
+
+The list can be shorter than the sequence (not all values will be sequenced) - but not longer.
+
+instancemethods::
+private:: embedInStream
+private:: filterEvent
+
 
 Examples::
 
