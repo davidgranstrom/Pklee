@@ -26,8 +26,8 @@ Pklee : FilterPattern {
 		var cleanup = EventStreamCleanup.new;
 
         loop {
-            // return the indices
-            activeSteps = argSteps.indicesOfEqual(1);
+            // get the indices
+            activeSteps = argSteps.indicesOfEqual(1) ?? { [] };
             // get the sum of the values
             val = (sequence@activeSteps).sum.clip(0, 1);
             // add it to the output stream
