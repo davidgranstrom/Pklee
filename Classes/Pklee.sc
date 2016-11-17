@@ -25,10 +25,8 @@ Pklee : FilterPattern {
         var val, filteredEvent, inEvent, inSteps;
 
         loop {
-            inSteps = steps.collect {|step, i|
-                // return the index
-                (step > 0).if(i, nil);
-            }.reject {|idx| idx.isNil };
+            // return the indices
+            inSteps = steps.indicesOfEqual(1);
             // get the sum of the values
             val = (sequence@inSteps).sum.clip(0, 1);
             // add it to the output stream
