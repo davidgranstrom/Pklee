@@ -16,26 +16,30 @@ Pklee : FilterPattern {
     }
 
     filterEvent {|event, val|
-        ^event[\kleeSum] = val;
+        event[\kleeSum] = val;
     }
 
     embedInStream {|event|
-        var val, filteredEvent, inEvent, inSteps;
-        var eventStream = pattern.asStream;
+        var val, outEvent, activeSteps;
+        var argSteps = steps;
+        var stream = pattern.asStream;
+		var cleanup = EventStreamCleanup.new;
 
         loop {
             // return the indices
-            inSteps = steps.indicesOfEqual(1);
+            activeSteps = argSteps.indicesOfEqual(1);
             // get the sum of the values
-            val = (sequence@inSteps).sum.clip(0, 1);
+            val = (sequence@activeSteps).sum.clip(0, 1);
             // add it to the output stream
             event = event.copy;
-            filteredEvent = this.filterEvent(event, val);
-            // advance the sequencer
-            steps = steps.rotate(1);
+            this.filterEvent(event, val);
 
-            inEvent = eventStream.next(filteredEvent);
-            event = yield(inEvent);
+            outEvent = stream.next(event);
+            if (outEvent.isNil) { ^cleanup.exit(event) };
+			cleanup.update(outEvent);
+            // advance the sequencer
+            argSteps = argSteps.rotate(1);
+            event = outEvent.yield;
         }
     }
 }
