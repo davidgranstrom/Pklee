@@ -23,7 +23,7 @@ Pklee : FilterPattern {
         var val, outEvent, activeSteps;
         var argSteps = steps;
         var stream = pattern.asStream;
-		var cleanup = EventStreamCleanup.new;
+        var cleanup = EventStreamCleanup.new;
 
         loop {
             // get the indices
@@ -36,7 +36,7 @@ Pklee : FilterPattern {
 
             outEvent = stream.next(event);
             if (outEvent.isNil) { ^cleanup.exit(event) };
-			cleanup.update(outEvent);
+            cleanup.update(outEvent);
             // advance the sequencer
             argSteps = argSteps.rotate(1);
             event = outEvent.yield;
