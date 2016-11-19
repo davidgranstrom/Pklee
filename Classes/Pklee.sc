@@ -30,10 +30,9 @@ Pklee : FilterPattern {
             activeSteps = argSteps.indicesOfEqual(1) ?? { [] };
             // get the sum of the values
             val = (sequence@activeSteps).sum.clip(0, 1);
-            // add it to the output stream
-            event = event.copy;
+            // add it to the output event
             this.filterEvent(event, val);
-
+            // get the output event
             outEvent = stream.next(event);
             if (outEvent.isNil) { ^cleanup.exit(event) };
             cleanup.update(outEvent);
